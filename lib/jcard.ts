@@ -1,4 +1,4 @@
-import {albumKey,type Project,type Layer,type Geometry,type SheetSide,type Track,layer,sheetGeometry,trackNote,cassetteBadges,albumArtwork} from './model';
+import {type Project,type Layer,type Geometry,type SheetSide,type Track,layer,sheetGeometry,trackNote,cassetteBadges,albumArtwork} from './model';
 // Layout is shared by the editor and every export; the reverse changes panel positions, never glyphs.
 export function fullJcardLayers(p:Project,g:Geometry,side:SheetSide):Layer[]{
  const b=p.booklet!,inner=side==='inner',out:Layer[]=[],ink=inner?b.innerInk:p.ink;
@@ -12,10 +12,6 @@ export function fullJcardLayers(p:Project,g:Geometry,side:SheetSide):Layer[]{
   if(!p.hideMeta)text('outer-cover-meta',[p.year,p.catalog].filter(Boolean).join(' · '),front.x+4,front.h-8,front.w-8,5,{size:6});
   const {half,lw,size,lh,texts,fits}=flapTracklist(p,g);
   if(fits){texts.forEach((content,i)=>{const cx=back.x+back.w/2,cy=back.y+3+half*(i+.5);text('tracks'+(i?'B':'A'),content,cx-lw/2,cy-lh/2,lw,lh,{name:'Треки · сторона '+(i?'B':'A'),size,minSize:size,rotation:90,align:'left',blockAlign:'center',vAlign:'middle',wrap:false});});}
-  else if(p.flapArtwork?.albumKey===albumKey(p)){
-   const image=p.flapArtwork,x=back.x+(back.w-image.w)/2,y=(back.h-23-image.h)/2;
-   out.push(layer({id:'flap-album-image',name:'Изображение по теме альбома',auto:true,side,type:'image',src:image.src,x,y,w:image.w,h:image.h,fit:'contain',cropX:0,cropY:0,zoom:1,visible:true}));
-  }
   badges('outer-back',back.x+3,back.h-21,Math.max(2,back.w-6),18);
  }
  const lw=spine.h-29,lh=Math.max(2,(spine.w-4)/2),cx=spine.x+spine.w/2,cy=spine.h/2,prefix=inner?'inner-':'';
