@@ -1,4 +1,4 @@
-import {type Project,type Layer,type Geometry,type SheetSide,type Track,layer,sheetGeometry,trackNote,cassetteBadges,albumArtwork} from './model';
+import {albumKey,type Project,type Layer,type Geometry,type SheetSide,type Track,layer,sheetGeometry,trackNote,cassetteBadges,albumArtwork} from './model';
 // Layout is shared by the editor and every export; the reverse changes panel positions, never glyphs.
 export function fullJcardLayers(p:Project,g:Geometry,side:SheetSide):Layer[]{
  const b=p.booklet!,inner=side==='inner',out:Layer[]=[],ink=inner?b.innerInk:p.ink;
@@ -10,20 +10,11 @@ export function fullJcardLayers(p:Project,g:Geometry,side:SheetSide):Layer[]{
  {
   if(p.titlePos!=='hidden'){text('title',p.title,front.x+5,p.titlePos==='bottom'?front.h*.65:p.titlePos==='center'?front.h*.43:12,front.w-10,front.h*.2,{name:'Название',font:p.titleFont,bold:true,size:p.titleSize});text('artist',p.artist,front.x+5,5,front.w-10,6,{name:'Исполнитель',size:8,bold:true});}
   if(!p.hideMeta)text('outer-cover-meta',[p.year,p.catalog].filter(Boolean).join(' · '),front.x+4,front.h-8,front.w-8,5,{size:6});
-  const half=(back.h-27)/2,lw=half-1,size=Math.max(7,Math.min(p.trackSize,10)),lh=back.w-6;
-  const texts=[p.tracksA,p.tracksB].map((tracks,i)=>(i?'B':'A')+' / '+sumDuration(tracks)+'\n'+tracks.map((t,n)=>`${String(n+1).padStart(2,'0')} ${t.title}${t.duration?' / '+t.duration:''}`).join('\n'));
-  const ctx=typeof document!=='undefined'?document.createElement('canvas').getContext('2d'):null;
-  if(ctx)ctx.font=`${size*25.4/72*10}px "${p.bodyFont}", sans-serif`;
-  const fits=texts.every(content=>{const lines=content.split('\n');return lines.length*size*25.4/72*1.2<=lh&&lines.every(line=>(ctx?ctx.measureText(line).width/10:line.length*size*25.4/72*.65)<=lw);});
+  const {half,lw,size,lh,texts,fits}=flapTracklist(p,g);
   if(fits){texts.forEach((content,i)=>{const cx=back.x+back.w/2,cy=back.y+3+half*(i+.5);text('tracks'+(i?'B':'A'),content,cx-lw/2,cy-lh/2,lw,lh,{name:'Треки · сторона '+(i?'B':'A'),size,minSize:size,rotation:90,align:'left',blockAlign:'center',vAlign:'middle',wrap:false});});}
-  else {
-   // Native-size cassette artwork: no raster scaling, crop or partial track list.
-   const x=back.x+3,y=19,w=back.w-6,h=47;
-   add('flap-art-frame',{name:'Кассетная графика · клапан',type:'rect',x,y,w,h,color:p.accent,visible:true,radius:1});
-   add('flap-art-inset',{type:'rect',x:x+1,y:y+1,w:w-2,h:h-2,color:p.paper,visible:true,radius:.7});
-   add('flap-art-window',{type:'rect',x:x+3,y:y+10,w:w-6,h:h-20,color:p.accent,visible:true,radius:1});
-   for(const [i,ry] of [y+17,y+h-17].entries()){add('flap-art-reel-'+i,{type:'ellipse',x:x+w/2-4,y:ry-4,w:8,h:8,color:p.paper,visible:true});add('flap-art-hub-'+i,{type:'ellipse',x:x+w/2-1.2,y:ry-1.2,w:2.4,h:2.4,color:p.accent,visible:true});}
-   text('flap-art-title','A / B',x,y+3,w,4,{font:'Arial',size:8,bold:true,align:'center',wrap:false});
+  else if(p.flapArtwork?.albumKey===albumKey(p)){
+   const image=p.flapArtwork,x=back.x+(back.w-image.w)/2,y=(back.h-23-image.h)/2;
+   out.push(layer({id:'flap-album-image',name:'Изображение по теме альбома',auto:true,side,type:'image',src:image.src,x,y,w:image.w,h:image.h,fit:'contain',cropX:0,cropY:0,zoom:1,visible:true}));
   }
   badges('outer-back',back.x+3,back.h-21,Math.max(2,back.w-6),18);
  }
@@ -40,3 +31,12 @@ export function labelLayers(p:Project,side:SheetSide):Layer[]{const sideName=sid
  const visible=tracks.slice(0,12);
  visible.forEach((t,i)=>{const col=i%2,row=Math.floor(i/2),x=4+col*42,y=row<3?5.8+row*2.8:28.7+(row-3)*2.8;add(side+'-track-'+t.id,{name:'Трек '+sideName+(i+1),text:String(i+1).padStart(2,'0')+' '+t.title,x,y,w:31.5,h:2.8,size:6.5,minSize:6.5,vAlign:'middle'})});
  add(side+'-brand',{text:cassetteBadges(p).join(' · '),x:4,y:39.2,w:81,h:1.5,size:3.5,align:'center',vAlign:'middle'});return out;}
+
+export function flapTracklist(p:Project,g:Geometry){
+ const back=g.panels.find(x=>x.id==='back')!; const half=(back.h-27)/2,lw=half-1,size=Math.max(7,Math.min(p.trackSize,10)),lh=back.w-6;
+  const texts=[p.tracksA,p.tracksB].map((tracks,i)=>(i?'B':'A')+' / '+sumDuration(tracks)+'\n'+tracks.map((t,n)=>`${String(n+1).padStart(2,'0')} ${t.title}${t.duration?' / '+t.duration:''}`).join('\n'));
+  const ctx=typeof document!=='undefined'?document.createElement('canvas').getContext('2d'):null;
+  if(ctx)ctx.font=`${size*25.4/72*10}px "${p.bodyFont}", sans-serif`;
+ const fits=texts.every(content=>{const lines=content.split('\n');return lines.length*size*25.4/72*1.2<=lh&&lines.every(line=>(ctx?ctx.measureText(line).width/10:line.length*size*25.4/72*.65)<=lw);});
+ return {half,lw,size,lh,texts,fits};
+}
