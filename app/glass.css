@@ -99,4 +99,23 @@ body{
   .studio-shell{padding:6px;gap:6px}
   .workspace{gap:6px}
   .inspector{background:rgba(255,255,255,.82)}
+  /* Labels don't fit beside the logo: icon-only buttons (font-size 0 keeps the label for screen readers). */
+  .header-actions{flex-wrap:nowrap}
+  .header-actions .btn{font-size:0;gap:0;padding:9px;min-height:38px}
+  .header-actions .btn svg{width:18px;height:18px}
 }
+
+/* Readable secondary text: the original greys drop to ~2:1 contrast on frosted panels (WCAG wants 4.5:1). */
+:root{--muted:#5b6552}
+.hint,.panel-intro,.field small,.field>span,small,summary,.status-hint,.status-label,.toolbar-dimension,
+.panel-ruler span,.vertical-ruler span,.artboard-caption,.inspector-title span,.inspector-title>button,
+.format-nav-label,.format-count,.format-nav>button,.guide-controls button,.view-switch button,.segmented button,
+.chips button,.statusbar>button,.zoom-controls button,.track-bottom button,.track-bottom input,.layer-list span,
+.layer-list>div>button:not(:first-child),.theme-grid>button,.empty-state p,.empty-state h3,.selected-heading>button,
+.project-row>button:last-child,.dropzone,.dropzone small,.three-caption,.three-controls,.help-steps p,
+.modal-help .section>p,.modal-help .section ul,.modal-header span,.modal-header>button,.export-summary>div>span,
+.print-instruction,.shortcut-grid,.comment small,.comment p,.gallery-card p,.icon-button,.range>span,.toggle,
+.track-grip,.searchbox,.source-link,.format-symbol,.toast>button{color:var(--muted)}
+.dropzone b,.help-steps h3,.print-instruction b,.export-summary b,.range b{color:#33402a}
+.project-row small,.format-list small,.results small,.format-nav>button.more-formats,.size-note,
+.zoom-controls button.zoom-value,.empty-state .btn{color:var(--muted)}
