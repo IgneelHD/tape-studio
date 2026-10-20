@@ -1,0 +1,24 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Tape Studio",
+  "version": "1.0.0",
+  "identifier": "io.github.igneelhd.tapestudio",
+  "build": {
+    "frontendDist": "../dist",
+    "devUrl": "http://127.0.0.1:5173",
+    "beforeDevCommand": "npm run dev",
+    "beforeBuildCommand": "npm run build"
+  },
+  "app": {
+    "windows": [{ "title": "Tape Studio", "width": 1440, "height": 900, "minWidth": 900, "minHeight": 600 }],
+    "security": { "csp": null }
+  },
+  "bundle": { "active": true, "targets": ["nsis"], "publisher": "IgneelHD", "createUpdaterArtifacts": true, "icon": ["icons/icon.ico", "icons/icon.png"] },
+  "plugins": {
+    "updater": {
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDkxMTE3QkQ3OUI2MDY3MzcKUldRM1oyQ2IxM3NSa1FKaGVibm41TlljN0JFR2NJOFJTZXNNanhpZTdrczdid05wUzZjUjI1SHMK",
+      "endpoints": ["https://github.com/IgneelHD/tape-studio/releases/latest/download/latest.json"],
+      "windows": { "installMode": "passive" }
+    }
+  }
+}

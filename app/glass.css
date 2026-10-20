@@ -1,0 +1,102 @@
+/* Glassmorphism theme: overrides globals.css, loaded after it. */
+:root{
+  --accent:#c6f36b;
+  --line:rgba(255,255,255,.55);
+  --panel:rgba(255,255,255,.55);
+  --glass:rgba(255,255,255,.42);
+  --glass-strong:rgba(255,255,255,.62);
+  --glass-soft:rgba(255,255,255,.28);
+  --glass-edge:rgba(255,255,255,.7);
+  --glass-shadow:0 10px 40px rgba(46,38,110,.18),inset 0 1px 0 rgba(255,255,255,.75);
+  --blur:blur(22px) saturate(170%);
+  --radius:14px;
+}
+
+body{
+  font-family:Inter,"Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;
+  background:
+    radial-gradient(40vw 40vw at 8% 12%,#8b7bff 0,transparent 60%),
+    radial-gradient(35vw 35vw at 92% 8%,#3fd8f0 0,transparent 60%),
+    radial-gradient(45vw 45vw at 85% 95%,#b7f05a 0,transparent 60%),
+    radial-gradient(40vw 40vw at 10% 95%,#ff8fc8 0,transparent 60%),
+    #e9e7ff;
+  background-attachment:fixed;
+}
+
+/* Floating glass panes */
+.studio-shell{padding:12px;gap:12px}
+.workspace{gap:12px}
+.app-header,.format-nav,.tool-rail,.inspector,.canvas-area{
+  background:var(--glass);
+  -webkit-backdrop-filter:var(--blur);backdrop-filter:var(--blur);
+  border:1px solid var(--glass-edge);
+  border-radius:var(--radius);
+  box-shadow:var(--glass-shadow);
+  overflow:hidden;
+}
+.app-header{
+  height:72px;
+  background:linear-gradient(120deg,rgba(24,22,48,.72),rgba(36,30,78,.6));
+  border-color:rgba(255,255,255,.22);
+  box-shadow:0 12px 40px rgba(20,16,60,.3),inset 0 1px 0 rgba(255,255,255,.18);
+}
+.format-nav{height:50px}
+.brand-mark{background:linear-gradient(135deg,#d6ff7a,#7ef0d0);border-radius:12px;box-shadow:0 4px 16px rgba(160,240,120,.45)}
+
+/* Inner surfaces become translucent */
+.canvas-toolbar,.canvas-bottom,.statusbar{background:var(--glass-soft);border-color:var(--line)}
+.canvas-area,.vertical-ruler span{background-color:transparent}
+.canvas-area{background:var(--glass-soft)}
+.inspector-title,.section,.modal-header,.results button,.asset-list button,.project-row,.comment,.audio-row{border-color:rgba(255,255,255,.5)}
+.viewport{background-image:radial-gradient(rgba(70,60,140,.22) .8px,transparent .8px)}
+.artboard{box-shadow:0 24px 60px rgba(40,30,110,.35),0 2px 6px rgba(40,30,110,.2)}
+
+/* Controls */
+.btn{background:var(--glass-strong);border-color:var(--glass-edge);border-radius:10px;
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.btn:hover:not(:disabled){background:rgba(255,255,255,.85);border-color:#fff}
+.btn.primary,.header-actions .btn.primary{
+  background:linear-gradient(135deg,#d6ff7a,#8ef0c8);border-color:transparent;color:#1b2a12;
+  box-shadow:0 6px 20px rgba(150,230,120,.45)}
+.btn.primary:hover:not(:disabled),.header-actions .btn.primary:hover{background:linear-gradient(135deg,#e2ff95,#a5f6d6)}
+.btn.subtle{background:var(--glass-soft)}
+.header-actions .btn{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.2)}
+.header-actions .btn:hover{background:rgba(255,255,255,.18)}
+
+.field input:not([type=color]),.field select,.field textarea,.color-input,.searchbox,.track,
+.dropzone,.formatting button,.decal-grid button,.chips button,.segmented,.view-switch,.zoom-controls,
+.sheet-select,.track-notes textarea,.font-preview,.results,.photo-grid button{
+  background:var(--glass-strong);border-color:rgba(255,255,255,.8);border-radius:10px}
+.field input:focus,.field textarea:focus,.field select:focus{outline:2px solid rgba(124,108,255,.6);outline-offset:1px}
+.segmented button,.view-switch button{border-radius:8px}
+.segmented button.active,.view-switch button.active{background:#fff;box-shadow:0 2px 10px rgba(60,50,140,.15)}
+.toggle i{background:rgba(120,110,170,.3)}
+.toggle input:checked+i{background:linear-gradient(135deg,#8b7bff,#3fd8f0)}
+
+/* Selected / hover states */
+.tool-rail>button,.format-nav>button{border-radius:10px}
+.tool-rail>button:hover,.format-nav>button:hover,.icon-button:hover,.format-list>button:hover,.results button:hover{background:rgba(255,255,255,.55)}
+.tool-rail>button.active,.format-nav>button.active,.format-list>button.selected,.layer-list>div.active,
+.chips button.active,.guide-controls button.active{
+  background:rgba(255,255,255,.8);color:#3a2f8f;box-shadow:inset 0 0 0 1px #fff,0 4px 14px rgba(60,50,140,.15)}
+
+/* Info blocks */
+.size-note,.export-summary,.print-instruction,.gallery-card,.gallery-icon,.selected-image,.format-symbol,
+.selected-heading>span,.shortcut-grid kbd,.badge,.modal-design figure{background:var(--glass-soft);border-color:rgba(255,255,255,.7)}
+.notice,.canvas-error{background:rgba(255,236,200,.7)}
+
+/* Overlays */
+.modal-backdrop{background:rgba(30,24,70,.35);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.modal,.toast{
+  background:rgba(255,255,255,.7);
+  -webkit-backdrop-filter:blur(30px) saturate(180%);backdrop-filter:blur(30px) saturate(180%);
+  border:1px solid #fff;box-shadow:0 30px 90px rgba(30,20,90,.35);border-radius:20px}
+.toast{border-radius:14px}
+.busy{background:rgba(24,22,48,.75);-webkit-backdrop-filter:var(--blur);backdrop-filter:var(--blur);border:1px solid rgba(255,255,255,.2)}
+
+/* Narrow screens: inspector slides over, so keep it opaque enough to read */
+@media (max-width:760px){
+  .studio-shell{padding:6px;gap:6px}
+  .workspace{gap:6px}
+  .inspector{background:rgba(255,255,255,.82)}
+}
