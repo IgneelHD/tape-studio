@@ -24,4 +24,6 @@ jobs:
         with:
           tagName: v__VERSION__
           releaseName: Tape Studio v__VERSION__
+          # A release with empty notes shows the tagged commit's message instead.
+          releaseBody: 'Установщик Tape Studio для Windows. Установленное приложение обновится само при следующем запуске.'
           releaseDraft: false
